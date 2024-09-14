@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from 'hono';
 import { sign } from 'hono/jwt';
+import bcrypt from 'bcrypt';
 
 export const userRouter = new Hono<{
     Bindings: {
@@ -17,11 +18,11 @@ userRouter.post('/signup', async (c) => {
     }).$extends(withAccelerate());
   
     const body = await c.req.json();
-  
+    const hashedPassword = await bcrypt.hash(body.password, 10);
     const user = await prisma.user.create({
       data: {
         email: body.email,
-        password: body.password,
+        password: hashedPassword,
         name: body.name
       },
     });
@@ -52,6 +53,15 @@ userRouter.post("/signin",async (c) => {
         return c.json({
             error: "User Not Found!"
         })
+    }
+
+    const isPasswordValid = await bcrypt.compare(body.password, user.password);
+
+    if (!isPasswordValid) {
+        c.status(403);
+        return c.json({
+            error: 'Invalid password!',
+        });
     }
 
     const token = await sign({id: user.id},c.env.JWT_SECRET);

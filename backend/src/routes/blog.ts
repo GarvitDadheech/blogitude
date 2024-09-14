@@ -69,6 +69,34 @@ blogRouter.put("/",async (c) => {
         id: blog.id
     })
 })  
+blogRouter.get("/bulk",async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate());
+
+    const limit = Number(c.req.query("limit")) || 10;
+    const offset = Number(c.req.query("offset")) || 0;
+
+    try{
+        const blogs = await prisma.post.findMany({
+            skip: offset,
+            take: limit
+        })
+        const totalBlogs = await prisma.post.count();
+        return c.json({
+            blogs,
+            totalBlogs,
+            currentPage: offset/limit + 1,
+            totalPages: Math.ceil(totalBlogs/limit)
+        })
+    }
+    catch(e) {
+        c.status(500)
+        return c.json({
+            message: "Error while fetching blogs!"
+        })
+    }
+})
 
 blogRouter.get("/:id", async (c) => {
     const prisma = new PrismaClient({
@@ -93,31 +121,3 @@ blogRouter.get("/:id", async (c) => {
     }
 })
 
-blogRouter.get("/bulk",async (c) => {
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL
-    }).$extends(withAccelerate());
-
-    const limit = Number(c.req.query("limit")) || 10;
-    const offset = Number(c.req.query("offset")) || 0;
-    
-    try{
-        const blogs = await prisma.post.findMany({
-            skip: offset,
-            take: limit
-        })
-        const totalBlogs = await prisma.post.count();
-        return c.json({
-            blogs,
-            totalBlogs,
-            currentPage: offset/limit + 1,
-            totalPages: Math.ceil(totalBlogs/limit)
-        })
-    }
-    catch(e) {
-        c.status(500)
-        return c.json({
-            message: "Error while fetching blogs!"
-        })
-    }
-})
