@@ -19,7 +19,7 @@ blogRouter.use("/*",async (c,next) => {
 
     if(user) {
         c.set("userId", user.id as string);
-        next();
+        await next();
     }
     else{
         c.status(403);
@@ -34,6 +34,7 @@ blogRouter.post("/",async (c) => {
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate())
     const body = await c.req.json();
+    
     const authId = c.get("userId");
     const blog = await prisma.post.create({
         data: {
@@ -97,12 +98,12 @@ blogRouter.get("/bulk",async (c) => {
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate());
     const body = await c.req.json();
-    const limit = body.limit || 10;
-    const offset = body.offset || 0;
+    const limit = Number(body.limit) || 10;
+    const offset = Number(body.offset) || 0;
     try{
-        const blogs = prisma.post.findMany({
+        const blogs = await prisma.post.findMany({
             skip: offset,
-            take: limit,
+            take: limit
         })
         const totalBlogs = await prisma.post.count();
         return c.json({
