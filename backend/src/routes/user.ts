@@ -3,6 +3,7 @@ import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from 'hono';
 import { sign } from 'hono/jwt';
 import * as bcrypt from 'bcryptjs';
+import { SignInBody,SignUpBody, signInBody, signUpBody } from '@garvit_dadheech/blogitude';
 
 export const userRouter = new Hono<{
     Bindings: {
@@ -12,12 +13,19 @@ export const userRouter = new Hono<{
 }>();
 
 userRouter.post('/signup', async (c) => {
-    try {
+  try {
+        const body = await c.req.json();
+        const {success} = signUpBody.safeParse(body);
+        if(!success) {
+          c.status(411);
+          return c.json({
+            message: "Incorrect Inputs!"
+          })
+        }
         const prisma = new PrismaClient({
             datasourceUrl: c.env.DATABASE_URL,
         }).$extends(withAccelerate());
 
-        const body = await c.req.json();
         const hashedPassword = await bcrypt.hash(body.password, 10);
         const user = await prisma.user.create({
             data: {
@@ -39,12 +47,19 @@ userRouter.post('/signup', async (c) => {
 });
 
 userRouter.post('/signin', async (c) => {
-    try {
+  try {
+      
+        const body = await c.req.json();
+        const {success} = signInBody.safeParse(body);
+        if(!success) {
+          c.status(411);
+          return c.json({
+            message: "Incorrect Inputs!"
+          })
+        }
         const prisma = new PrismaClient({
             datasourceUrl: c.env.DATABASE_URL
         }).$extends(withAccelerate());
-
-        const body = await c.req.json();
 
         const user = await prisma.user.findUnique({
             where: {
