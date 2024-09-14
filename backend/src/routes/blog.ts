@@ -29,15 +29,21 @@ blogRouter.use("/*",async (c,next) => {
     }
 })
 
-// blogRouter.post("/blog",async (c) => {
-//     const prisma = new PrismaClient({
-//         datasourceUrl: c.env.DATABASE_URL
-//     }).$extends(withAccelerate())
-//     const body = await c.req.json();
-//     const blog = await prisma.post.create({
-//         data: {
-//             title: body.title,
-//             content: body.content
-//         }
-//     })
-// })
+blogRouter.post("/blog",async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+    const body = await c.req.json();
+    const authId = c.get("userId");
+    const blog = await prisma.post.create({
+        data: {
+            title: body.title,
+            content: body.content,
+            authorId: authId
+        }
+    })
+
+    return c.json({
+        blogId: blog.id
+    })
+})
