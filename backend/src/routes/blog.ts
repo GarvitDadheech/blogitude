@@ -69,4 +69,27 @@ blogRouter.put("/",async (c) => {
     })
 })  
 
+blogRouter.get("/", async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate());
+    const body = await c.req.json();
+    try {
+        const blog = await prisma.post.findFirst({
+            where: {
+                id: body.id
+            }
+        })
+        return c.json({
+            blog
+        })
+    }
+    catch(e) {
+        c.status(411);
+        return c.json({
+            message: "Error while fetching the post!"
+        })
+    }
+})
+
 
