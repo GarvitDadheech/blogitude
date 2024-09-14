@@ -10,7 +10,6 @@ export const signUpBody = z.object({
 export const signInBody = z.object({
     email: z.string().email(),
     password: z.string().min(6),
-    name: z.string()
 })
 
 export const postBlogBody = z.object({

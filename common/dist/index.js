@@ -13,7 +13,6 @@ exports.signUpBody = zod_1.default.object({
 exports.signInBody = zod_1.default.object({
     email: zod_1.default.string().email(),
     password: zod_1.default.string().min(6),
-    name: zod_1.default.string()
 });
 exports.postBlogBody = zod_1.default.object({
     title: zod_1.default.string(),

@@ -15,15 +15,12 @@ export declare const signUpBody: z.ZodObject<{
 export declare const signInBody: z.ZodObject<{
     email: z.ZodString;
     password: z.ZodString;
-    name: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     email: string;
     password: string;
-    name: string;
 }, {
     email: string;
     password: string;
-    name: string;
 }>;
 export declare const postBlogBody: z.ZodObject<{
     title: z.ZodString;
