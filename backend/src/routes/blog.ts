@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client/edge";
+import { Prisma, PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { verify } from "hono/jwt";
@@ -29,7 +29,7 @@ blogRouter.use("/*",async (c,next) => {
     }
 })
 
-blogRouter.post("/blog",async (c) => {
+blogRouter.post("/",async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate())
@@ -47,3 +47,26 @@ blogRouter.post("/blog",async (c) => {
         blogId: blog.id
     })
 })
+
+blogRouter.put("/",async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate());
+    const body = await c.req.json();
+    const userId = c.get("userId");
+    const blog = await prisma.post.update({
+        where: {
+            id: body.id,
+            authorId: userId
+        },
+        data: {
+            title: body.title,
+            content: body.content
+        }
+    })
+    return c.json({
+        id: blog.id
+    })
+})  
+
+
