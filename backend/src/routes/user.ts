@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from 'hono';
 import { sign } from 'hono/jwt';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 export const userRouter = new Hono<{
     Bindings: {
