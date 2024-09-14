@@ -92,4 +92,30 @@ blogRouter.get("/", async (c) => {
     }
 })
 
-
+blogRouter.get("/bulk",async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate());
+    const body = await c.req.json();
+    const limit = body.limit || 10;
+    const offset = body.offset || 0;
+    try{
+        const blogs = prisma.post.findMany({
+            skip: offset,
+            take: limit,
+        })
+        const totalBlogs = await prisma.post.count();
+        return c.json({
+            blogs,
+            totalBlogs,
+            currentPage: offset/limit + 1,
+            totalPages: Math.ceil(totalBlogs/limit)
+        })
+    }
+    catch(e) {
+        c.status(500)
+        return c.json({
+            message: "Error while fetching blogs!"
+        })
+    }
+})
