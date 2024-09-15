@@ -1,0 +1,1 @@
+export const BACKEND_URL = "https://backend.garvitdadheech9170.workers.dev/api/v1"
