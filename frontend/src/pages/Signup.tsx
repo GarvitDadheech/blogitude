@@ -7,6 +7,7 @@ import { SignUpBody } from "@garvit_dadheech/blogitude"
 import axios from "axios"
 import {BACKEND_URL} from "../../config"
 import { useNavigate } from "react-router-dom"
+import { Loader } from "../components/Loader"
 
 export const Signup = () => {
 
@@ -19,9 +20,11 @@ export const Signup = () => {
     const navigate = useNavigate();
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
 
     async function handleClick() {
+        setLoading(true);
         try{
             const response = await axios.post(`${BACKEND_URL}/user/signup`,postInputs);
             const jwt = response.data.jwt;
@@ -32,7 +35,9 @@ export const Signup = () => {
             setErrorMessage("Sorry, registration failed. Please try again.");
             setShowErrorModal(true);
         }
-
+        finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -58,6 +63,7 @@ export const Signup = () => {
                     })
                 }} type="password"/>
                 <Button content="Sign Up" handleClick={handleClick}/>
+                {loading && <Loader/>}
                 {showErrorModal && (
                     <div className="mt-4 p-4 border border-red-500 bg-red-100 text-red-500 rounded-lg">
                         {errorMessage}
