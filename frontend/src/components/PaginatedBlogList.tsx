@@ -81,7 +81,6 @@ export const PaginatedBlogList: React.FC = () => {
 
   return (
     <div>
-      <Appbar />
       <div className="w-screen flex justify-center items-center flex-col">
         {blogs.length > 0 ? (
           blogs.map((blog) => (
