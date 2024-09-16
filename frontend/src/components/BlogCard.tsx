@@ -15,6 +15,7 @@ export const BlogCard = ({title,content,authorname,date}: BlogInput) => {
             </div>
             <div className="font-extrabold text-3xl">{title}</div>
             <div className="text-md text-slate-600 font-bold mb-2">{content.slice(0,200)}...</div>
+            <div className="text-slate-500 text-sm mb-2">{`${Math.ceil(content.length/100)} minute(s) read`}</div>
         </div>
     )
 }
