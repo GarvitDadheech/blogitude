@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Button } from "../components/Button"
 import { Heading } from "../components/Heading"
 import { InputBox } from "../components/InputBox"
@@ -8,6 +8,8 @@ import axios from "axios"
 import { BACKEND_URL } from "../../config"
 import { useNavigate } from "react-router-dom"
 import { Loader } from "../components/Loader"
+
+import UserContext from "../context/UserContext"
 
 export const Signin = () => {
 
@@ -20,13 +22,19 @@ export const Signin = () => {
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
+    const userContext = useContext(UserContext);
+    if (!userContext) {
+        return
+    }
+    const { setUser } = userContext;
     
     async function handleClick() {
         setLoading(true);
         try{
             const response = await axios.post(`${BACKEND_URL}/user/signin`,postInputs);
             const jwt = response.data.jwt;
-            localStorage.setItem("token",jwt);
+            localStorage.setItem("token",jwt);            
+            setUser(response.data.name);
             navigate("/blogs");
         }
         catch(e) {

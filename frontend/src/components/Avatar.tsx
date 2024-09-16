@@ -1,13 +1,23 @@
-interface AvatarInput{
-    username: string,
-    dimension : string
+import React, { useContext } from 'react';
+import UserContext from '../context/UserContext';
+interface AvatarInput {
+    username?: string; 
+    dimension: string;
 }
 
-function Avatar({ username,dimension } : AvatarInput) {
-    return (
-        <div className={`rounded-full h-${dimension} w-${dimension} border-2 border-slate-500 border-solid flex justify-center items-center `}>
-            {username[0].toUpperCase()}
-        </div>
-    );
-}
+const Avatar: React.FC<AvatarInput> = ({ username, dimension }) => {
+    const userContext = useContext(UserContext);
+    if (userContext) {
+        const displayUsername = username || userContext.user;
+
+        return (
+            <div
+                className={`rounded-full h-${dimension} w-${dimension} border-2 border-slate-500 border-solid flex justify-center items-center`}
+            >
+                {displayUsername ? displayUsername[0].toUpperCase() : '?'}
+            </div>
+        );
+    }
+};
+
 export default Avatar;

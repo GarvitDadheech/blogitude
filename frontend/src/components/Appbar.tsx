@@ -16,7 +16,7 @@ export const Appbar = () => {
                             <div className="text-xl text-slate-600 ml-2">Write</div>
                         </div>
                     </Link>
-                    <Avatar username="Garvit" dimension="8"/>
+                    <Avatar dimension="8"/>
                 </div>
             </div>
             <div className="h-[1px] w-screen bg-slate-200 mt-4"></div>
