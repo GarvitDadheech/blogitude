@@ -31,7 +31,7 @@ export const Blog = () => {
                         <div className="flex flex-col w-2/3">
                             <div className="text-4xl font-extrabold mb-2">{blog.contents.title}</div>
                             <div className="text-md text-slate-500 font-bold mb-2">{new Date(blog.contents.publishedAt).toLocaleDateString()}</div>
-                            <div>{blog.contents.content}</div>
+                            <div>{blog.contents.content.replace(/<\/?[^>]+(>|$)/g, "")}</div>
                         </div>
                     </div>
                     <div className=" mt-10 flex justify-center mr-20 bg-slate-50 p-6 rounded-xl">
