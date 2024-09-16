@@ -1,5 +1,6 @@
 import { FaBook } from "react-icons/fa";
 import Avatar from "./Avatar";
+import { Link } from "react-router-dom";
 
 export const Appbar = () => {
     return (
@@ -9,10 +10,12 @@ export const Appbar = () => {
                     <div className="text-4xl font-extrabold">Blogitude</div>
                 </div>
                 <div className="flex-1 flex justify-end items-center mr-8">
-                    <div className="flex items-center mr-10">
-                        <FaBook className="mt-1 text-xl text-slate-600" />
-                        <div className="text-xl text-slate-600 ml-2">Write</div>
-                    </div>
+                    <Link to={"/publish"}>
+                        <div className="flex items-center mr-10">
+                            <FaBook className="mt-1 text-xl text-slate-600" />
+                            <div className="text-xl text-slate-600 ml-2">Write</div>
+                        </div>
+                    </Link>
                     <Avatar username="Garvit" dimension="8"/>
                 </div>
             </div>
