@@ -12,9 +12,9 @@ function App() {
       <Routes>
         
         <Route path='/signup' element={<Signup/>}/>
-        <Route path='signin' element={<Signin/>}/>
+        <Route path='/signin' element={<Signin/>}/>
         <Route path='/blogs' element={<AllBlogs/>}/>
-        <Route path='blog' element={<Blog title={"This is the blog"} content={"Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem labore expedita quis earum odit, sint cupiditate. Consequuntur, repellat maiores qui sapiente libero aperiam quis eveniet vel voluptatibus? Esse maiores at atque corrupti cum quo accusantium debitis porro quam excepturi, ipsa exercitationem doloremque molestias autem quis. Earum deleniti, libero harum ut esse dignissimos voluptas culpa nisi tenetur aperiam doloremque quisquam quaerat placeat!"} date={"13-23-24"}/>}/>
+        <Route path='/blog/:id' element={<Blog/>}/>
       </Routes>
     </BrowserRouter>
   )

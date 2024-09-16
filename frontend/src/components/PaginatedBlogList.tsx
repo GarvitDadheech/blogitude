@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Appbar } from "../components/Appbar";
 import { BlogCard } from "../components/BlogCard";
 import { BACKEND_URL } from '../../config';
 import { BlogCardSkeleton } from './BlogCardSkeleton';
@@ -87,6 +86,7 @@ export const PaginatedBlogList: React.FC = () => {
           blogs.map((blog) => (
             <BlogCard
               key={blog.id}
+              id = {blog.id}
               authorname={blog.author.name}
               date={new Date(blog.publishedAt).toLocaleDateString()}
               content={blog.content}
