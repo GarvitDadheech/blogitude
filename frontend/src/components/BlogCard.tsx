@@ -14,7 +14,7 @@ export const BlogCard = ({title,content,authorname,date}: BlogInput) => {
                 <div className="text-slate-700 font-bold">{date}</div>
             </div>
             <div className="font-extrabold text-3xl">{title}</div>
-            <div className="text-md">{content.slice(0,200)}...</div>
+            <div className="text-md text-slate-600 font-bold mb-2">{content.slice(0,200)}...</div>
         </div>
     )
 }
