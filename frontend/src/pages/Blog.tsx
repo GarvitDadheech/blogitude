@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom"
 import { Appbar } from "../components/Appbar"
 import Avatar from "../components/Avatar"
 import { useBlog } from "../hooks/useBlog"
+import { BlogSkeleton } from "../components/BlogSkeleton";
 interface Blog {
     title: string;
     publishedAt: string;
@@ -13,9 +14,11 @@ interface Author{
 }
 
 export const Blog = () => {
+    
     const id = useParams<{id : string}>();
     const { isLoading, blog }: { isLoading: boolean; blog: Blog } = useBlog(id.id as string);
-    if (isLoading) return <div>Loading...</div>;
+
+    if (isLoading) return <div><BlogSkeleton/></div>;
     return (
         <div>
             <Appbar/>
