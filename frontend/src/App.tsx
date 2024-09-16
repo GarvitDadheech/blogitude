@@ -5,6 +5,7 @@ import { Signin } from './pages/Signin'
 import { AllBlogs } from './pages/AllBlogs'
 import { Blog } from './pages/Blog'
 import { RecoilRoot } from 'recoil'
+import { Publish } from './pages/Publish'
 
 function App() {
 
@@ -15,7 +16,8 @@ function App() {
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/signin' element={<Signin/>}/>
           <Route path='/blogs' element={<AllBlogs/>}/>
-            <Route path='/blog/:id' element={<Blog/>}/>
+          <Route path='/blog/:id' element={<Blog/>}/>
+          <Route path='/publish' element={<Publish/>}/>
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

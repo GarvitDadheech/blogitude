@@ -30,7 +30,7 @@ export const Blog = () => {
                     <div className="flex justify-center items-start w-[75%] mt-10">
                         <div className="flex flex-col w-2/3">
                             <div className="text-4xl font-extrabold mb-2">{blog.contents.title}</div>
-                            <div className="text-md text-slate-500 font-bold mb-2">{blog.contents.publishedAt}</div>
+                            <div className="text-md text-slate-500 font-bold mb-2">{new Date(blog.contents.publishedAt).toLocaleDateString()}</div>
                             <div>{blog.contents.content}</div>
                         </div>
                     </div>
