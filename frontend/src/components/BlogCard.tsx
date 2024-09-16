@@ -6,6 +6,7 @@ interface BlogInput{
     date: string
 }
 export const BlogCard = ({title,content,authorname,date}: BlogInput) => {
+    {console.log(authorname)}
     return (
         <div className="flex flex-col w-2/5 items-start border-b mb-4">
             <div className="flex justify-center items-center mt-4">

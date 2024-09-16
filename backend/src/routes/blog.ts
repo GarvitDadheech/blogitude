@@ -55,7 +55,8 @@ blogRouter.post("/", async (c) => {
             data: {
                 title: body.title,
                 content: body.content,
-                authorId: authId
+                authorId: authId,
+                publishedAt: new Date()
             }
         });
 
@@ -118,7 +119,14 @@ blogRouter.get("/bulk", async (c) => {
 
         const blogs = await prisma.post.findMany({
             skip: offset,
-            take: limit
+            take: limit,
+            include: {
+                author: {
+                    select: {
+                        name: true
+                    }
+                }
+            }
         });
         const totalBlogs = await prisma.post.count();
 
