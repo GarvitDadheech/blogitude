@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Appbar } from "../components/Appbar";
 import { BlogCard } from "../components/BlogCard";
 import { BACKEND_URL } from '../../config';
+import { BlogCardSkeleton } from './BlogCardSkeleton';
 
 interface Blog {
   id: string;
@@ -72,7 +73,7 @@ export const PaginatedBlogList: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <BlogCardSkeleton/>;
   }
 
   if (error) {
