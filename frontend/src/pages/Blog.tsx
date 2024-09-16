@@ -4,6 +4,7 @@ import Avatar from "../components/Avatar"
 import { BlogSkeleton } from "../components/BlogSkeleton";
 import { useRecoilValueLoadable } from "recoil";
 import { BlogAtom } from "../store/atoms/BlogAtom";
+import { FaExclamationTriangle } from "react-icons/fa";
 interface Blog {
     title: string;
     publishedAt: string;
@@ -49,7 +50,16 @@ export const Blog = () => {
             </div>
         )
     }
-    else {
-        return <div>Not able to get the blog</div>
+    else{
+        return (
+            <div>
+                <Appbar/>
+                <div className="flex flex-col items-center justify-center mt-72">
+                    <FaExclamationTriangle className="text-red-500 text-6xl mb-4" />
+                    <div className="text-2xl font-bold mb-2">Oops! Unable to fetch the blog.</div>
+                    <div className="text-lg text-gray-500">Something went wrong while retrieving the blog. Please try again later.</div>
+                </div>
+            </div>
+        )
     }
 }
