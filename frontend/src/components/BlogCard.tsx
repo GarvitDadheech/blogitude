@@ -49,6 +49,10 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
             setLoading(false);
         }
     }
+    
+    const handleUpdate = () => {
+        navigate(`/update-blog/${id}`)
+    }
 
     return (
         <div className="border-b flex justify-center flex-col w-2/5">
@@ -68,7 +72,7 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
                 {isUserBlogs && (
                     <div className="flex gap-4 mt-2">
                         <button
-                            //onClick={handleUpdate}
+                            onClick={handleUpdate}
                             className="bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-800 mb-4"
                         >
                             Update Blog

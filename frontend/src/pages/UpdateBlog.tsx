@@ -1,54 +1,89 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import { Appbar } from "../components/Appbar";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
-import { useNavigate } from "react-router-dom";
-import { PostBlogBody } from "@garvit_dadheech/blogitude";
+import { useNavigate, useParams } from "react-router-dom";
+import { UpdateBlogBody } from "@garvit_dadheech/blogitude";
 import { Loader } from "../components/Loader";
 
 const toolbarOptions = [
     [{ 'size': ['small', false, 'large', 'huge'] }],
     ['bold', 'italic', 'underline'],  
     ['link', 'image']               
-  ];
+];
 
-export const Publish = () => {
-    const [postblogInput,setPostBlogInput] = useState<PostBlogBody>({
+export const UpdateBlog = () => {
+    const { id } = useParams();
+    if(!id){
+        return
+    }
+    const navigate = useNavigate();
+    const [postBlogInput, setPostBlogInput] = useState<UpdateBlogBody>({
+        id: "",
         title: "",
         content: ""
-    });  
-    const naviagte = useNavigate();    
+    });
     const [successMessage, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(false);
+
+    useEffect(() => {
+        const fetchBlog = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await axios.get(`${BACKEND_URL}/blog/${id}`,{
+                    headers: {
+                        Authorization: token
+                    }
+                });
+                console.log(response.data)
+                setPostBlogInput({
+                    id: id,
+                    title: response.data.blog.title,
+                    content: response.data.blog.content
+                });
+                console.log(postBlogInput);
+                
+            } catch (error) {
+                console.error("Error fetching blog data", error);
+            } finally {
+                setFetching(false);
+            }
+        };
+        fetchBlog();
+    }, [id]);
 
     const handleContentChange = (value: string) => {
         setPostBlogInput({
-            ...postblogInput,
+            ...postBlogInput,
             content: value
         });
     };
 
-    
-    const handlePublish = async () => {
-        try{
-            setLoading(true)
+    const handleUpdate = async () => {
+        try {
+            setLoading(true);
             const token = localStorage.getItem("token");
-            const response = await axios.post(`${BACKEND_URL}/blog`,postblogInput,{
+            const response = await axios.put(`${BACKEND_URL}/blog`, postBlogInput, {
                 headers: {
                     Authorization: token
                 }
-            })
-            setSuccessMessage("Your post has been published successfully");
+            });
+            setSuccessMessage("Your post has been updated successfully");
             setLoading(false);
             await new Promise(resolve => setTimeout(resolve, 2000));
-            naviagte("/blogs");
-        }
-        catch(e){
-            return <div>Error while Publishing Post!</div>
+            navigate("/user-blogs");
+        } catch (error) {
+            console.error("Error updating blog", error);
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (fetching) return <Loader />;
+
 
     return (
         <div>
@@ -61,29 +96,31 @@ export const Publish = () => {
                         </div>
                     )}
                     <button
-                        onClick={handlePublish}
+                        onClick={handleUpdate}
                         className="bg-slate-800 text-white w-28 font-bold py-2 px-6 mt-4 rounded hover:bg-slate-900"
                     >
-                        Publish
+                        Update
                     </button>
-                    {loading && <Loader/>}
+                    {loading && <Loader />}
                 </div>
-               
+
                 <input
                     type="text"
                     placeholder="Blog Title"
+                    value={postBlogInput.title}
                     className="w-2/3 p-2 border border-gray-300 rounded mb-6"
                     onChange={(e) => setPostBlogInput({
-                        ...postblogInput,
-                        title : e.target.value
+                        ...postBlogInput,
+                        title: e.target.value
                     })}
                 />
-                
+
                 <div className="w-2/3 mb-6">
                     <ReactQuill
+                        value={postBlogInput.content}
                         onChange={handleContentChange}
                         theme="snow"
-                        placeholder="Write your blog content here..."
+                        placeholder="Update your blog content here..."
                         className="h-[400px]"
                         modules={{ toolbar: toolbarOptions }}
                     />
