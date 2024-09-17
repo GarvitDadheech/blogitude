@@ -168,8 +168,8 @@ blogRouter.get("/bulk", async (c) => {
     }
 });
 
-blogRouter.get("/user-blogs",async (c) => {
-    try{
+blogRouter.get("/user-blogs", async (c) => {
+    try {
         const prisma = new PrismaClient({
             datasourceUrl: c.env.DATABASE_URL
         }).$extends(withAccelerate());
@@ -182,10 +182,16 @@ blogRouter.get("/user-blogs",async (c) => {
                 message: "User not authenticated"
             });
         }
+
+        const limit = Number(c.req.query("limit")) || 10;
+        const offset = Number(c.req.query("offset")) || 0;
+
         const blogs = await prisma.post.findMany({
             where: {
                 authorId: userId
             },
+            skip: offset,
+            take: limit,
             include: {
                 author: {
                     select: {
@@ -193,19 +199,28 @@ blogRouter.get("/user-blogs",async (c) => {
                     }
                 }
             }
-        })
-        
+        });
+
+        const totalBlogs = await prisma.post.count({
+            where: {
+                authorId: userId
+            }
+        });
+
         return c.json({
-            blogs
-        })
-    }
-    catch(e) {
+            blogs,
+            totalBlogs,
+            currentPage: offset / limit + 1,
+            totalPages: Math.ceil(totalBlogs / limit)
+        });
+    } catch (e) {
         c.status(500);
         return c.json({
             message: "Error while fetching your blogs"
-        })
+        });
     }
-})
+});
+
 
 blogRouter.get("/:id", async (c) => {
     try {
