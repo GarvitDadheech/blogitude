@@ -46,7 +46,7 @@ export const Blog = () => {
                             <Avatar username={blog.contents.author.name} dimension="8"/>
                             <div className="flex flex-col ml-5">
                                 <div className="text-2xl font-bold">{blog.contents.author.name}</div>
-                                <div className="text-slate-500 font-bold w-[300px]">He is a guy whom no one knows, he used to live in the woods, but i know him.</div>
+                                <div className="text-slate-500 font-bold w-[300px] mt-6">"Write what should not be forgotten." — Isabel Allende</div>
                             </div>
                         </div>
                         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import { Appbar } from "../components/Appbar";
@@ -7,21 +7,24 @@ import { BACKEND_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
 import { PostBlogBody } from "@garvit_dadheech/blogitude";
 import { Loader } from "../components/Loader";
+import { useSetRecoilState } from 'recoil';
+import { ReloadBlogsAtom } from "../store/atoms/ReloadBlogAtom";
 
 const toolbarOptions = [
     [{ 'size': ['small', false, 'large', 'huge'] }],
     ['bold', 'italic', 'underline'],  
     ['link', 'image']               
-  ];
+];
 
 export const Publish = () => {
-    const [postblogInput,setPostBlogInput] = useState<PostBlogBody>({
+    const [postblogInput, setPostBlogInput] = useState<PostBlogBody>({
         title: "",
         content: ""
     });  
-    const naviagte = useNavigate();    
+    const navigate = useNavigate();    
     const [successMessage, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const setReloadBlogs = useSetRecoilState(ReloadBlogsAtom);
 
     const handleContentChange = (value: string) => {
         setPostBlogInput({
@@ -30,23 +33,23 @@ export const Publish = () => {
         });
     };
 
-    
     const handlePublish = async () => {
-        try{
-            setLoading(true)
+        try {
+            setLoading(true);
             const token = localStorage.getItem("token");
-            const response = await axios.post(`${BACKEND_URL}/blog`,postblogInput,{
+            await axios.post(`${BACKEND_URL}/blog`, postblogInput, {
                 headers: {
                     Authorization: token
                 }
-            })
+            });
             setSuccessMessage("Your post has been published successfully");
             setLoading(false);
+            setReloadBlogs(true);
             await new Promise(resolve => setTimeout(resolve, 2000));
-            naviagte("/blogs");
-        }
-        catch(e){
-            return <div>Error while Publishing Post!</div>
+            navigate("/blogs");
+        } catch (e) {
+            setLoading(false);
+            setSuccessMessage("Error while publishing post!");
         }
     };
 
@@ -66,7 +69,7 @@ export const Publish = () => {
                     >
                         Publish
                     </button>
-                    {loading && <Loader/>}
+                    {loading && <Loader />}
                 </div>
                
                 <input
@@ -75,7 +78,7 @@ export const Publish = () => {
                     className="w-2/3 p-2 border border-gray-300 rounded mb-6"
                     onChange={(e) => setPostBlogInput({
                         ...postblogInput,
-                        title : e.target.value
+                        title: e.target.value
                     })}
                 />
                 
