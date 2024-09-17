@@ -18,7 +18,7 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
     const [showModal, setShowModal] = useState(false);
     const [loading,setLoading] = useState(false);
     const navigate = useNavigate();
-
+    
     const handleDelete = async () => {
         const token = localStorage.getItem("token");
         if(!token) {
@@ -33,17 +33,20 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
             })
             setLoading(false);
             setShowModal(true);
+            console.log(response.data);
+            
             setTimeout(() => {
+                setShowModal(true);
                 navigate("/user-blogs");
+                window.location.reload();
             }, 2000);
             console.log(response.data);   
         }
         catch(e) {
             console.log("Not able to delete");
             console.log(e);
-        }
-        finally{
             setShowModal(false);
+            setLoading(false);
         }
     }
 
@@ -63,7 +66,7 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
                     <div className="text-slate-500 text-sm mb-2">{`${Math.ceil(content.length/100)} minute(s) read`}</div>
                 </Link>
                 {isUserBlogs && (
-                    <div className="flex gap-4 mt-4">
+                    <div className="flex gap-4 mt-2">
                         <button
                             //onClick={handleUpdate}
                             className="bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-800 mb-4"
@@ -76,9 +79,11 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
                         >
                             Delete Blog
                         </button>
+                        <div className="flex justify-center items-center w-28 h-2">
+                            {loading && <Loader/>}
+                        </div>
                     </div>
                 )}
-                {loading && <Loader/>}
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
                         <div className="bg-white p-6 rounded shadow-lg text-center">
