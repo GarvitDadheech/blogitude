@@ -6,7 +6,7 @@ export const BlogAtom = atomFamily({
     key: 'BlogAtom',
     default: selectorFamily({
         key: "BlogAtomSelector",
-        get: (id : {id?:string}) => async ({get}) => {
+        get: (id : {id?:string}) => async ({}) => {
             
             const token = localStorage.getItem('token');
             if (!token) {

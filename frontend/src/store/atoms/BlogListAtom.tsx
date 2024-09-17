@@ -20,7 +20,7 @@ export const BlogListAtom = atomFamily({
   key: 'BlogListAtom',
   default: selectorFamily({
     key: 'BlogListAtomSelector',
-    get: ({ page, isUserBlogs, reloadKey }: { page: number; isUserBlogs: boolean; reloadKey: number }) => async () => {
+    get: ({ page, isUserBlogs }: { page: number; isUserBlogs: boolean; reloadKey: number }) => async () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import { Appbar } from "../components/Appbar";
@@ -66,7 +66,7 @@ export const UpdateBlog = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem("token");
-            const response = await axios.put(`${BACKEND_URL}/blog`, postBlogInput, {
+            await axios.put(`${BACKEND_URL}/blog`, postBlogInput, {
                 headers: {
                     Authorization: token
                 }
