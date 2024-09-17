@@ -36,7 +36,7 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
             console.log(response.data);
             
             setTimeout(() => {
-                setShowModal(true);
+                setShowModal(false);
                 navigate("/user-blogs");
                 window.location.reload();
             }, 2000);
