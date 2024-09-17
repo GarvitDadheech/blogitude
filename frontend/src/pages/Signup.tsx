@@ -25,7 +25,6 @@ export const Signup = () => {
 
     const userContext = useContext(UserContext);
     if (!userContext) {
-    // handle the case where the context is undefined
     return;
     }
     const { setUser } = userContext;

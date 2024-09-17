@@ -91,7 +91,7 @@ export const UpdateBlog = () => {
             <div className="flex flex-col items-center mt-5">
                 <div className="flex justify-center w-screen items-center flex-col mb-4">
                     {successMessage && (
-                        <div className="p-2.5 bg-green-100 text-green-800 border border-green-300 rounded-md my-2.5">
+                        <div className="p-2.5 bg-slate-100 border border-slate-300 rounded-md my-2.5">
                             {successMessage}
                         </div>
                     )}
