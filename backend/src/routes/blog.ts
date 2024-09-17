@@ -74,22 +74,43 @@ blogRouter.post("/", async (c) => {
 blogRouter.put("/", async (c) => {
     try {
         const body = await c.req.json();
-        const {success} = updateBlogBody.safeParse(body);
-        if(!success) {
+        const { success } = updateBlogBody.safeParse(body);
+        if (!success) {
             c.status(411);
             return c.json({
                 message: "Incorrect Inputs!"
-            })
+            });
         }
+
         const prisma = new PrismaClient({
             datasourceUrl: c.env.DATABASE_URL
         }).$extends(withAccelerate());
 
         const userId = c.get("userId");
-        const blog = await prisma.post.update({
+
+        const blog = await prisma.post.findUnique({
             where: {
-                id: body.id,
-                authorId: userId
+                id: body.id
+            }
+        });
+
+        if (!blog) {
+            c.status(404);
+            return c.json({
+                message: "Blog not found"
+            });
+        }
+
+        if (blog.authorId !== userId) {
+            c.status(403);
+            return c.json({
+                message: "Unauthorized to update this blog"
+            });
+        }
+
+        const updatedBlog = await prisma.post.update({
+            where: {
+                id: body.id
             },
             data: {
                 title: body.title,
@@ -98,15 +119,18 @@ blogRouter.put("/", async (c) => {
         });
 
         return c.json({
-            id: blog.id
+            id: updatedBlog.id
         });
-    } catch (e) {
+    } 
+    catch (e) {
+        console.error("Error while updating blog:", e);
         c.status(500);
         return c.json({
             message: "Error while updating blog!"
         });
     }
 });
+
 
 blogRouter.get("/bulk", async (c) => {
     try {
@@ -213,3 +237,48 @@ blogRouter.get("/:id", async (c) => {
         });
     }
 });
+
+blogRouter.delete("/:id", async (c) => {
+    try {
+        const prisma = new PrismaClient({
+            datasourceUrl: c.env.DATABASE_URL
+        }).$extends(withAccelerate());
+
+        const blogId = c.req.param("id");
+        if (!blogId) {
+            c.status(400);
+            return c.json({ message: "Blog ID is required" });
+        }
+
+        const userId = c.get("userId");
+
+        const blog = await prisma.post.findUnique({
+            where: {
+                id: blogId
+            }
+        });
+
+        if (!blog) {
+            c.status(404);
+            return c.json({ message: "Blog not found" });
+        }
+
+        if (blog.authorId !== userId) {
+            c.status(403);
+            return c.json({ message: "Unauthorized to delete this blog" });
+        }
+
+        await prisma.post.delete({
+            where: {
+                id: blogId
+            }
+        });
+
+        return c.json({ message: "Blog deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting blog:", error);
+        c.status(500);
+        return c.json({ message: "Error while deleting the blog" });
+    }
+});
+
