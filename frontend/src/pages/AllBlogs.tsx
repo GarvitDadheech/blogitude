@@ -6,7 +6,7 @@ export const AllBlogs = () => {
     return(
         <div>
             <Appbar/>
-            <PaginatedBlogList/>
+            <PaginatedBlogList isUserBlogs={false}/>
         </div>
     )
 }

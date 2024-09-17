@@ -43,7 +43,7 @@ export const Blog = () => {
                         <div className="flex flex-col">
                         <div className="font-semibold text-xl mb-4">Author</div> 
                         <div className="flex justify-between">
-                            <Avatar username="Garvit" dimension="8"/>
+                            <Avatar username={blog.contents.author.name} dimension="8"/>
                             <div className="flex flex-col ml-5">
                                 <div className="text-2xl font-bold">{blog.contents.author.name}</div>
                                 <div className="text-slate-500 font-bold w-[300px]">He is a guy whom no one knows, he used to live in the woods, but i know him.</div>

@@ -22,7 +22,7 @@ interface ApiResponse {
   totalPages: number;
 }
 
-export const PaginatedBlogList: React.FC = () => {
+export const PaginatedBlogList = ({isUserBlogs} : {isUserBlogs : boolean}) => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -31,8 +31,47 @@ export const PaginatedBlogList: React.FC = () => {
   const blogsPerPage: number = 6;
 
   useEffect(() => {
-    fetchBlogs();
+    if(!isUserBlogs) {
+      fetchBlogs();
+    }
+    else{
+      fetchUserBlogs();
+    }
   }, [currentPage]);
+
+
+  const fetchUserBlogs = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await axios.get<ApiResponse>(
+        `${BACKEND_URL}/blog/user-blogs?limit=${blogsPerPage}&offset=${(currentPage - 1) * blogsPerPage}`,
+        {
+          headers: {
+            'Authorization': `${token}`
+          }
+        }
+      );
+      
+      setBlogs(response.data.blogs);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        setError('Authentication failed. Please log in again.');
+      } else {
+        setError('Error fetching blogs. Please try again later.');
+      }
+      console.error('Error fetching blogs:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const fetchBlogs = async (): Promise<void> => {
     setIsLoading(true);
