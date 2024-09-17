@@ -9,7 +9,6 @@ import { Publish } from './pages/Publish'
 import UserContextProvider from './context/UserContextProvider'
 import { UserBlogs } from './pages/UserBlogs'
 import { UpdateBlog } from './pages/UpdateBlog'
-import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
 
@@ -21,11 +20,11 @@ function App() {
             <Route path="/" element={<Navigate to="/signup" replace />} />
             <Route path='/signup' element={<Signup/>}/>
             <Route path='/signin' element={<Signin/>}/>
-            <Route path='/blogs' element={<ProtectedRoute><AllBlogs/></ProtectedRoute>}/>
-            <Route path='/blog/:id' element={<ProtectedRoute><Blog/></ProtectedRoute>}/>
-            <Route path='/publish' element={<ProtectedRoute><Publish/></ProtectedRoute>}/>
-            <Route path='/user-blogs' element={<ProtectedRoute><UserBlogs/></ProtectedRoute>}/>
-            <Route path="/update-blog/:id" element={<ProtectedRoute><UpdateBlog/></ProtectedRoute>} />
+            <Route path='/blogs' element={<AllBlogs/>}/>
+            <Route path='/blog/:id' element={<Blog/>}/>
+            <Route path='/publish' element={<Publish/>}/>
+            <Route path='/user-blogs' element={<UserBlogs/>}/>
+            <Route path="/update-blog/:id" element={<UpdateBlog/>} />
           </Routes>
         </BrowserRouter>
       </UserContextProvider>
