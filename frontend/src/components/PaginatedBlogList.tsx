@@ -19,7 +19,6 @@ export const PaginatedBlogList = ({ isUserBlogs }: { isUserBlogs: boolean }) => 
         }
     }, [reloadBlogs]);
 
-
     const handlePageChange = (newPage: number): void => {
         setCurrentPage(newPage);
     };
@@ -29,14 +28,14 @@ export const PaginatedBlogList = ({ isUserBlogs }: { isUserBlogs: boolean }) => 
     }
 
     if (blogsLoadable.state === 'hasError') {
-        return <div>Error loading blogs</div>;
+        return <div className="text-center text-red-500 p-4">Error loading blogs</div>;
     }
 
     const { blogs, totalPages } = blogsLoadable.contents;
 
     return (
-        <div>
-            <div className="w-screen flex justify-center items-center flex-col">
+        <div className="w-full max-w-full px-2 sm:px-4 md:px-6">
+            <div className="flex flex-col items-center">
                 {blogs.length > 0 ? (
                     blogs.map((blog) => (
                         <BlogCard
@@ -50,25 +49,25 @@ export const PaginatedBlogList = ({ isUserBlogs }: { isUserBlogs: boolean }) => 
                         />
                     ))
                 ) : (
-                    <div>{isUserBlogs && <NoBlogShow />}</div>
+                    <div className="w-full">{isUserBlogs && <NoBlogShow />}</div>
                 )}
             </div>
             {blogs.length > 0 && (
-                <div className="flex justify-center mt-4 mb-8">
+                <div className="flex gap-5 items-center justify-center mt-6 mb-8">
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="px-4 py-2 mr-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
+                        className="px-3 py-1 text-sm bg-slate-700 text-white rounded hover:bg-slate-800 disabled:bg-gray-300 disabled:cursor-not-allowed md:p-1 md:w-12 lg:p-3 lg:w-20 md:text-md"
                     >
-                        Previous
+                        Prev
                     </button>
-                    <span className="px-4 py-2">
+                    <span className="text-xs sm:text-sm md:text-lg">
                         Page {currentPage} of {totalPages}
                     </span>
                     <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="px-4 py-2 ml-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
+                        className="px-3 py-1 text-sm bg-slate-700 text-white rounded hover:bg-slate-800 disabled:bg-gray-300 disabled:cursor-not-allowed md:p-1 md:w-12 lg:p-3 lg:w-20 md:text-md"
                     >
                         Next
                     </button>

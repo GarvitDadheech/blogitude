@@ -7,17 +7,17 @@ import UserMenuDropdown from "./UserDropDownMenu";
 export const Appbar = () => {
     const userContext = useContext(UserContext);
     return (
-        <div className="flex flex-col">
-            <div className="flex justify-between items-center mt-4">
-                <div className="flex ml-8">
-                    <Link to={"/blogs"} className="text-4xl font-extrabold">Blogitude</Link>
+        <div className="flex flex-col border-b-2 border-slate-300">
+            <div className="flex md:flex-row justify-between items-center px-4 py-2 md:py-4">
+                <div className="flex items-center">
+                    <Link to={"/blogs"} className="text-3xl md:text-4xl font-extrabold">
+                        Blogitude
+                    </Link>
                 </div>
-                <div className="flex-1 flex justify-end items-center mr-8">
-                    <Link to={"/publish"}>
-                        <div className="flex items-center mr-10">
-                            <FaBook className="mt-1 text-xl text-slate-600" />
-                            <div className="text-xl text-slate-600 ml-2">Write</div>
-                        </div>
+                <div className="flex-1 flex justify-end items-center space-x-4 md:space-x-10 mt-2 md:mt-0">
+                    <Link to={"/publish"} className="flex items-center text-lg md:text-xl text-slate-600">
+                        <FaBook className="text-lg md:text-xl" />
+                        <span className="ml-1 md:ml-2">Write</span>
                     </Link>
                     <div className="relative group">
                         <UserMenuDropdown
@@ -26,8 +26,6 @@ export const Appbar = () => {
                     </div>
                 </div>
             </div>
-            <div className="h-[1px] w-screen bg-slate-200 mt-4"></div>
         </div>
     );
 };
-

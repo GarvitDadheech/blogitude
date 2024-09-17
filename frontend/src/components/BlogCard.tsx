@@ -5,6 +5,7 @@ import axios from "axios"
 import { BACKEND_URL } from "../../config"
 import { useState } from "react"
 import { Loader } from "./Loader"
+
 interface BlogInput{
     id: string
     title: string,
@@ -13,6 +14,7 @@ interface BlogInput{
     date: string,
     isUserBlogs: boolean
 }
+
 export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInput) => {
     const sanitizedFullContent = DOMPurify.sanitize(content);
     const truncatedContent = sanitizedFullContent.split(/\s+/).slice(0, 30).join(' ') + '...';
@@ -60,52 +62,55 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
     const timeToRead = Math.ceil(words / wordsPerMinute);
 
     return (
-        <div className="border-b flex justify-center flex-col w-2/5">
-                <Link to={`/blog/${id}`} className="flex flex-col items-start mb-4 cursor-pointer">
-                    <div className="flex justify-center items-center mt-4">
-                        <Avatar username={authorname} dimension="8" />
-                        <div className="mx-4 font-semibold text-xl">{authorname}</div>
-                        <div className="text-slate-700 font-bold">{date}</div>
-                    </div>
-                    <div className="font-extrabold text-3xl">{title}</div>
-                    <div
-                        className="text-md text-slate-600 font-bold mb-2"
-                        dangerouslySetInnerHTML={{ __html: truncatedContent }}
+        <div className="border-b flex justify-center flex-col w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 px-4 py-4">
+            <Link to={`/blog/${id}`} className="flex flex-col items-start mb-4 cursor-pointer">
+                <div className="flex flex-wrap items-center mt-2 mb-2">
+                    <Avatar 
+                        username={authorname} 
+                        dimension="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12" 
                     />
-                    <div className="text-slate-500 text-sm mb-2">{`${timeToRead} minute(s) read`}</div>
-                </Link>
-                {isUserBlogs && (
-                    <div className="flex gap-4 mt-2">
-                        <button
-                            onClick={handleUpdate}
-                            className="bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-800 mb-4"
-                        >
-                            Update Blog
-                        </button>
-                        <button
-                            onClick={handleDelete}
-                            className="bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-800 mb-4"
-                        >
-                            Delete Blog
-                        </button>
-                        <div className="flex justify-center items-center w-28 h-2">
-                            {loading && <Loader/>}
-                        </div>
+                    <div className="ml-2 font-semibold text-base sm:text-lg">{authorname}</div>
+                    <div className="ml-2 text-slate-700 text-sm">{date}</div>
+                </div>
+                <div className="font-bold text-xl sm:text-2xl mb-2">{title}</div>
+                <div
+                    className="text-sm sm:text-base text-slate-600 mb-2"
+                    dangerouslySetInnerHTML={{ __html: truncatedContent }}
+                />
+                <div className="text-slate-500 text-xs sm:text-sm mb-2">{`${timeToRead} minute(s) read`}</div>
+            </Link>
+            {isUserBlogs && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                    <button
+                        onClick={handleUpdate}
+                        className="bg-slate-700 text-white px-3 py-1 text-sm rounded hover:bg-slate-800"
+                    >
+                        Update
+                    </button>
+                    <button
+                        onClick={handleDelete}
+                        className="bg-slate-700 text-white px-3 py-1 text-sm rounded hover:bg-slate-800"
+                    >
+                        Delete
+                    </button>
+                    <div className="flex items-center h-8 ml-2">
+                        {loading && <Loader/>}
                     </div>
-                )}
-                {showModal && (
-                    <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded shadow-lg text-center">
-                            <h2 className="text-lg font-semibold mb-4">Blog Deleted Successfully</h2>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                            >
-                                OK
-                            </button>
-                        </div>
+                </div>
+            )}
+            {showModal && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+                    <div className="bg-white p-4 rounded shadow-lg text-center">
+                        <h2 className="text-base font-semibold mb-3">Blog Deleted Successfully</h2>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="bg-blue-500 text-white px-3 py-1 text-sm rounded hover:bg-blue-600"
+                        >
+                            OK
+                        </button>
                     </div>
-                )}
+                </div>
+            )}
         </div>
     )
 }

@@ -12,7 +12,7 @@ const Avatar: React.FC<AvatarInput> = ({ username, dimension }) => {
 
         return (
             <div
-                className={`rounded-full h-${dimension} w-${dimension} border-2 border-slate-500 border-solid flex justify-center items-center`}
+                className={`rounded-full border-2 border-slate-500 border-solid flex justify-center items-center ${dimension}`}
             >
                 {displayUsername ? displayUsername[0].toUpperCase() : '?'}
             </div>
