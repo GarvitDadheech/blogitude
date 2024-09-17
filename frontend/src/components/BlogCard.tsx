@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import Avatar from "./Avatar"
+import DOMPurify from "dompurify"
 interface BlogInput{
     id: string
     title: string,
@@ -8,6 +9,7 @@ interface BlogInput{
     date: string
 }
 export const BlogCard = ({title,content,authorname,date,id}: BlogInput) => {
+    const sanitizedContent = DOMPurify.sanitize(content.slice(0, 200));
     return (
         <Link to={`/blog/${id}`} className="flex flex-col w-2/5 items-start border-b mb-4 cursor-pointer">
             <div className="flex justify-center items-center mt-4">
@@ -16,7 +18,10 @@ export const BlogCard = ({title,content,authorname,date,id}: BlogInput) => {
                 <div className="text-slate-700 font-bold">{date}</div>
             </div>
             <div className="font-extrabold text-3xl">{title}</div>
-            <div className="text-md text-slate-600 font-bold mb-2">{content.slice(0,200).replace(/<\/?[^>]+(>|$)/g, "")}...</div>
+            <div
+                className="text-md text-slate-600 font-bold mb-2"
+                dangerouslySetInnerHTML={{ __html: sanitizedContent + '...' }}
+            />
             <div className="text-slate-500 text-sm mb-2">{`${Math.ceil(content.length/100)} minute(s) read`}</div>
         </Link>
     )

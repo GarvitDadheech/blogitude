@@ -5,6 +5,7 @@ import { Appbar } from "../components/Appbar";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
+import { PostBlogBody } from "@garvit_dadheech/blogitude";
 
 const toolbarOptions = [
     [{ 'size': ['small', false, 'large', 'huge'] }],
@@ -13,24 +14,25 @@ const toolbarOptions = [
   ];
 
 export const Publish = () => {
-    const [content, setContent] = useState(""); 
-    const [title, setTitle] = useState("");  
+    const [postblogInput,setPostBlogInput] = useState<PostBlogBody>({
+        title: "",
+        content: ""
+    });  
     const naviagte = useNavigate();    
     const [successMessage, setSuccessMessage] = useState('');
 
     const handleContentChange = (value: string) => {
-        setContent(value);
+        setPostBlogInput({
+            ...postblogInput,
+            content: value
+        });
     };
 
     
     const handlePublish = async () => {
         try{
-            const postBody = {
-                title,
-                content
-            }
             const token = localStorage.getItem("token");
-            const response = await axios.post(`${BACKEND_URL}/blog`,postBody,{
+            const response = await axios.post(`${BACKEND_URL}/blog`,postblogInput,{
                 headers: {
                     Authorization: token
                 }
@@ -66,13 +68,14 @@ export const Publish = () => {
                     type="text"
                     placeholder="Blog Title"
                     className="w-2/3 p-2 border border-gray-300 rounded mb-6"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setPostBlogInput({
+                        ...postblogInput,
+                        title : e.target.value
+                    })}
                 />
                 
                 <div className="w-2/3 mb-6">
                     <ReactQuill
-                        value={content}
                         onChange={handleContentChange}
                         theme="snow"
                         placeholder="Write your blog content here..."

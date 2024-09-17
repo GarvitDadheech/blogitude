@@ -7,6 +7,7 @@ import { Blog } from './pages/Blog'
 import { RecoilRoot } from 'recoil'
 import { Publish } from './pages/Publish'
 import UserContextProvider from './context/UserContextProvider'
+import { UserBlogs } from './pages/UserBlogs'
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
             <Route path='/blogs' element={<AllBlogs/>}/>
             <Route path='/blog/:id' element={<Blog/>}/>
             <Route path='/publish' element={<Publish/>}/>
+            <Route path='/user-blogs' element={<UserBlogs/>}/>
           </Routes>
         </BrowserRouter>
       </UserContextProvider>
