@@ -10,7 +10,7 @@ export const Appbar = () => {
         <div className="flex flex-col">
             <div className="flex justify-between items-center mt-4">
                 <div className="flex ml-8">
-                    <div className="text-4xl font-extrabold">Blogitude</div>
+                    <Link to={"/blogs"} className="text-4xl font-extrabold">Blogitude</Link>
                 </div>
                 <div className="flex-1 flex justify-end items-center mr-8">
                     <Link to={"/publish"}>

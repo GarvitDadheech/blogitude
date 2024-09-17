@@ -14,7 +14,8 @@ interface BlogInput{
     isUserBlogs: boolean
 }
 export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInput) => {
-    const sanitizedContent = DOMPurify.sanitize(content.slice(0, 200));
+    const sanitizedFullContent = DOMPurify.sanitize(content);
+    const truncatedContent = sanitizedFullContent.split(/\s+/).slice(0, 30).join(' ') + '...';
     const [showModal, setShowModal] = useState(false);
     const [loading,setLoading] = useState(false);
     const navigate = useNavigate();
@@ -54,6 +55,10 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
         navigate(`/update-blog/${id}`)
     }
 
+    const wordsPerMinute = 200;
+    const words = content.trim().split(/\s+/).length;
+    const timeToRead = Math.ceil(words / wordsPerMinute);
+
     return (
         <div className="border-b flex justify-center flex-col w-2/5">
                 <Link to={`/blog/${id}`} className="flex flex-col items-start mb-4 cursor-pointer">
@@ -65,9 +70,9 @@ export const BlogCard = ({title,content,authorname,date,id,isUserBlogs}: BlogInp
                     <div className="font-extrabold text-3xl">{title}</div>
                     <div
                         className="text-md text-slate-600 font-bold mb-2"
-                        dangerouslySetInnerHTML={{ __html: sanitizedContent + '...' }}
+                        dangerouslySetInnerHTML={{ __html: truncatedContent }}
                     />
-                    <div className="text-slate-500 text-sm mb-2">{`${Math.ceil(content.length/100)} minute(s) read`}</div>
+                    <div className="text-slate-500 text-sm mb-2">{`${timeToRead} minute(s) read`}</div>
                 </Link>
                 {isUserBlogs && (
                     <div className="flex gap-4 mt-2">
