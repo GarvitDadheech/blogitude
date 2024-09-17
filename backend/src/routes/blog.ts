@@ -144,6 +144,9 @@ blogRouter.get("/bulk", async (c) => {
         const blogs = await prisma.post.findMany({
             skip: offset,
             take: limit,
+            orderBy: {
+                publishedAt: 'desc' 
+            },
             include: {
                 author: {
                     select: {
