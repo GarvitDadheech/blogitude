@@ -2,6 +2,7 @@ import { FaBook } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import UserContext from "../context/UserContext";
+import UserMenuDropdown from "./UserDropDownMenu";
 
 export const Appbar = () => {
     const userContext = useContext(UserContext);
@@ -18,12 +19,10 @@ export const Appbar = () => {
                             <div className="text-xl text-slate-600 ml-2">Write</div>
                         </div>
                     </Link>
-                    <div className="">
-                    <div
-                        className={`rounded-full h-8 w-8 border-2 border-slate-500 border-solid flex justify-center items-center`}
-                    >
-                        {userContext?.user ? userContext.user[0].toUpperCase() : ''}
-                    </div>
+                    <div className="relative group">
+                        <UserMenuDropdown
+                            userInitial={userContext?.user ? userContext.user[0].toUpperCase() : '?'}
+                        />
                     </div>
                 </div>
             </div>
