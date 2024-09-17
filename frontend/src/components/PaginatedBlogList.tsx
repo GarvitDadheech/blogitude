@@ -3,6 +3,7 @@ import axios from 'axios';
 import { BlogCard } from "../components/BlogCard";
 import { BACKEND_URL } from '../../config';
 import { BlogCardSkeleton } from './BlogCardSkeleton';
+import { NoBlogShow } from './NoBlogShow';
 
 interface Blog {
   id: string;
@@ -130,10 +131,11 @@ export const PaginatedBlogList = ({isUserBlogs} : {isUserBlogs : boolean}) => {
               date={new Date(blog.publishedAt).toLocaleDateString()}
               content={blog.content}
               title={blog.title}
+              isUserBlogs = {isUserBlogs}
             />
           ))
         ) : (
-          <div>No blogs found.</div>
+          <div >{isUserBlogs && <NoBlogShow/>}</div>
         )}
       </div>
       {blogs.length > 0 && (

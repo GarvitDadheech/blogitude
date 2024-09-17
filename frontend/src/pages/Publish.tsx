@@ -6,6 +6,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
 import { PostBlogBody } from "@garvit_dadheech/blogitude";
+import { Loader } from "../components/Loader";
 
 const toolbarOptions = [
     [{ 'size': ['small', false, 'large', 'huge'] }],
@@ -20,6 +21,7 @@ export const Publish = () => {
     });  
     const naviagte = useNavigate();    
     const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleContentChange = (value: string) => {
         setPostBlogInput({
@@ -31,6 +33,7 @@ export const Publish = () => {
     
     const handlePublish = async () => {
         try{
+            setLoading(true)
             const token = localStorage.getItem("token");
             const response = await axios.post(`${BACKEND_URL}/blog`,postblogInput,{
                 headers: {
@@ -38,6 +41,7 @@ export const Publish = () => {
                 }
             })
             setSuccessMessage("Your post has been published successfully");
+            setLoading(false);
             await new Promise(resolve => setTimeout(resolve, 3000));
             naviagte("/blogs");
         }
@@ -62,6 +66,7 @@ export const Publish = () => {
                     >
                         Publish
                     </button>
+                    {loading && <Loader/>}
                 </div>
                
                 <input
