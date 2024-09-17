@@ -1,123 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useRecoilValueLoadable } from 'recoil';
+import { BlogListAtom } from '../store/atoms/BlogListAtom';
 import { BlogCard } from "../components/BlogCard";
-import { BACKEND_URL } from '../../config';
 import { BlogCardSkeleton } from './BlogCardSkeleton';
 import { NoBlogShow } from './NoBlogShow';
 
-interface Blog {
-  id: string;
-  author: Author;
-  title: string;
-  content: string;
-  publishedAt: string;
-}
-interface Author {
-    name: string;
-}
-
-interface ApiResponse {
-  blogs: Blog[];
-  totalBlogs: number;
-  currentPage: number;
-  totalPages: number;
-}
-
-export const PaginatedBlogList = ({isUserBlogs} : {isUserBlogs : boolean}) => {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+export const PaginatedBlogList = ({ isUserBlogs }: { isUserBlogs: boolean }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const blogsPerPage: number = 6;
 
-  useEffect(() => {
-    if(!isUserBlogs) {
-      fetchBlogs();
-    }
-    else{
-      fetchUserBlogs();
-    }
-  }, [currentPage]);
-
-
-  const fetchUserBlogs = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-
-      const response = await axios.get<ApiResponse>(
-        `${BACKEND_URL}/blog/user-blogs?limit=${blogsPerPage}&offset=${(currentPage - 1) * blogsPerPage}`,
-        {
-          headers: {
-            'Authorization': `${token}`
-          }
-        }
-      );
-      
-      setBlogs(response.data.blogs);
-      setTotalPages(response.data.totalPages);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        setError('Authentication failed. Please log in again.');
-      } else {
-        setError('Error fetching blogs. Please try again later.');
-      }
-      console.error('Error fetching blogs:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  const fetchBlogs = async (): Promise<void> => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-
-      const response = await axios.get<ApiResponse>(
-        `${BACKEND_URL}/blog/bulk?limit=${blogsPerPage}&offset=${(currentPage - 1) * blogsPerPage}`,
-        {
-          headers: {
-            'Authorization': `${token}`
-          }
-        }
-      );
-      
-      setBlogs(response.data.blogs);
-      setTotalPages(response.data.totalPages);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        setError('Authentication failed. Please log in again.');
-      } else {
-        setError('Error fetching blogs. Please try again later.');
-      }
-      console.error('Error fetching blogs:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const blogsLoadable = useRecoilValueLoadable(BlogListAtom({ page: currentPage, isUserBlogs }));
 
   const handlePageChange = (newPage: number): void => {
     setCurrentPage(newPage);
   };
 
-  if (isLoading) {
-    return <BlogCardSkeleton/>;
+  if (blogsLoadable.state === 'loading') {
+    return <BlogCardSkeleton />;
   }
 
-  if (error) {
-    return <div>{error}</div>;
+  if (blogsLoadable.state === 'hasError') {
+    return <div>Error loading blogs</div>;
   }
+
+  const { blogs, totalPages } = blogsLoadable.contents;
 
   return (
     <div>
@@ -126,16 +31,16 @@ export const PaginatedBlogList = ({isUserBlogs} : {isUserBlogs : boolean}) => {
           blogs.map((blog) => (
             <BlogCard
               key={blog.id}
-              id = {blog.id}
+              id={blog.id}
               authorname={blog.author.name}
               date={new Date(blog.publishedAt).toLocaleDateString()}
               content={blog.content}
               title={blog.title}
-              isUserBlogs = {isUserBlogs}
+              isUserBlogs={isUserBlogs}
             />
           ))
         ) : (
-          <div >{isUserBlogs && <NoBlogShow/>}</div>
+          <div>{isUserBlogs && <NoBlogShow />}</div>
         )}
       </div>
       {blogs.length > 0 && (
