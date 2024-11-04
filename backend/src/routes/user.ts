@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from 'hono';
-import { sign } from 'hono/jwt';
+import { sign,verify } from 'hono/jwt';
 import * as bcrypt from 'bcryptjs';
 import { SignInBody,SignUpBody, signInBody, signUpBody } from '@garvit_dadheech/blogitude';
 
@@ -94,3 +94,22 @@ userRouter.post('/signin', async (c) => {
         return c.json({ error: 'Error during signin' });
     }
 });
+
+userRouter.get('/validate-token', async (c) => {
+    const authHeader = c.req.header('authorization') || '';
+    const token = authHeader[1];
+
+    if (!token) {
+        c.status(403);
+        return c.json({ message: "Not Authorized!" });
+    }
+
+    try {
+        const user = await verify(token, c.env.JWT_SECRET);
+        return c.json({ valid: true, userId: user.id });
+    } catch (e) {
+        c.status(401);
+        return c.json({ message: "Error during authorization!" });
+    }
+});
+

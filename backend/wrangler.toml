@@ -1,7 +1,7 @@
 name = "backend"
 compatibility_date = "2024-09-14"
 node_compat = true
-
+main = "src/index.ts"
 [vars]
 DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiODUxMmRmOGItZmQwMy00ZTgwLTkzMTgtY2NlNTZiMjdlNDBlIiwidGVuYW50X2lkIjoiOTNlZmE3ZGZhNmQzNjAwNzcyMzY0YjYwMjc2MTkxYTQyYWZjNDBmZWVhODNkODZjMzk5YmE5ZjlmNDkyYzBjNSIsImludGVybmFsX3NlY3JldCI6IjMyNzAwMzE2LTg3OTEtNGY5Zi04ZWRhLWQxNjhmODRkZGUwNyJ9.z5khVwnRP_K3u0l2T_FOzbV4rwFQZNtx7K9fmLynlZk"
 JWT_SECRET = "supersecretpassword"
