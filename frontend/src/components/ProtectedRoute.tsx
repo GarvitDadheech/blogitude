@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
+import { BACKEND_URL } from "../../config"
 import { Loader } from './Loader';
 
 interface ProtectedRouteProps {
@@ -18,7 +19,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
     console.log(token);
     try {
-      const response = await axios.get('/user/validate-token', {
+      const response = await axios.get(`${BACKEND_URL}/user/validate-token`, {
         headers: {
           Authorization: `${token}`,
         },
