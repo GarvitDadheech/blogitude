@@ -94,8 +94,7 @@ userRouter.post('/signin', async (c) => {
 });
 
 userRouter.get('/validate-token', async (c) => {
-    const authHeader = c.req.header('authorization') || '';
-    const token = authHeader[1];
+    const token = c.req.header('authorization') || '';
 
     if (!token) {
         c.status(403);
