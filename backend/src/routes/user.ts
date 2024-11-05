@@ -25,7 +25,6 @@ userRouter.post('/signup', async (c) => {
         const prisma = new PrismaClient({
             datasourceUrl: c.env.DATABASE_URL,
         }).$extends(withAccelerate());
-
         const hashedPassword = await bcrypt.hash(body.password, 10);
         const user = await prisma.user.create({
             data: {
@@ -36,7 +35,6 @@ userRouter.post('/signup', async (c) => {
         });
 
         const token = await sign({ id: user.id }, c.env.JWT_SECRET);
-
         return c.json({
             jwt: token
         });

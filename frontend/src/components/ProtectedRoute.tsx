@@ -11,31 +11,31 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const token = localStorage.getItem('token');
 
+  const validateToken = async () => {
+    if (!token) {
+      setIsValid(false);
+      return;
+    }
+    console.log(token);
+    try {
+      const response = await axios.get('/user/validate-token', {
+        headers: {
+          Authorization: `${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        setIsValid(response.data.valid);
+      } else {
+        setIsValid(false);
+      }
+    } catch (error) {
+      console.error("Error validating token:", error);
+      setIsValid(false);
+    }
+  };
+
   useEffect(() => {
-    const validateToken = async () => {
-      if (!token) {
-        setIsValid(false);
-        return;
-      }
-
-      try {
-        const response = await axios.get('/api/validate-token', {
-          headers: {
-            Authorization: `${token}`,
-          },
-        });
-
-        if (response.status === 200) {
-          setIsValid(response.data.valid);
-        } else {
-          setIsValid(false);
-        }
-      } catch (error) {
-        console.error("Error validating token:", error);
-        setIsValid(false);
-      }
-    };
-
     validateToken();
   }, [token]);
 

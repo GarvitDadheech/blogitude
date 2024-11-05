@@ -29,11 +29,9 @@ export const Signup = () => {
     }
     const { setUser } = userContext;
 
-
     async function handleClick() {
         setLoading(true);
         try{
-            console.log(postInputs);
             const response = await axios.post(`${BACKEND_URL}/user/signup`,postInputs);
             const jwt = response.data.jwt;
             localStorage.setItem("token",jwt);
